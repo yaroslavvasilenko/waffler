@@ -4,6 +4,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/yaroslavvasilenko/waffler/config"
 	"github.com/yaroslavvasilenko/waffler/internal/infrastructure/logs"
+	"github.com/yaroslavvasilenko/waffler/run"
 	"log"
 	"os"
 )
@@ -20,5 +21,17 @@ func main() {
 
 	// create logger
 	logger := logs.NewLogger(conf, os.Stdout)
-	logger.Info("logger created")
+
+	conf.Init(logger)
+
+	// Creating an application instance
+	app := run.NewApp(conf, logger)
+
+	exitCode := app.
+		// Initialize the application
+		Bootstrap().
+		// Launch the application
+		Run()
+
+	os.Exit(exitCode)
 }
